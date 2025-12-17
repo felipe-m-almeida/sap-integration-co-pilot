@@ -96,12 +96,12 @@ export default function Home() {
         </div>
 
         {/* Template Selection */}
-        <Card className="flex-grow">
-          <CardHeader>
+        <Card className="flex-1 flex flex-col min-h-0 overflow-hidden"> {/* flex-1 para ocupar espaço restante */}
+          <CardHeader className="pb-2">
             <CardTitle>Templates</CardTitle>
           </CardHeader>
-          <CardContent className="flex-grow">
-            <ScrollArea className="h-[calc(100vh-800px)] w-full rounded-md border p-4"> {/* Adjusted height */}
+          <CardContent className="flex-1 p-0 min-h-0 overflow-hidden relative"> 
+            <ScrollArea className="h-full w-full p-4"> {/* h-full para preencher o card */}
               <TemplateSelector onSelectTemplate={handleSelectTemplate} />
             </ScrollArea>
           </CardContent>

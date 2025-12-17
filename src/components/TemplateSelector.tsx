@@ -3,13 +3,11 @@
 import * as React from "react"
 
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible"
-import { Separator } = "@/components/ui/separator"
-import { ChevronDownIcon } from "@radix-ui/react-icons"
-
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 import { templates } from "@/lib/templates"
 
 interface TemplateSelectorProps {
@@ -17,6 +15,12 @@ interface TemplateSelectorProps {
 }
 
 export function TemplateSelector({ onSelectTemplate }: TemplateSelectorProps) {
+  // console.log("Templates carregados:", templates); // Debug log removido para produção
+
+  if (!templates || Object.keys(templates).length === 0) {
+    return <div className="p-4 text-sm text-red-500">Nenhum template disponível.</div>;
+  }
+
   const getTemplateName = (category: string, template: any, index: number) => {
     if (category === "Cliente") {
       const name = template?.DEBMAS06?.E1KNA1M?.NAME1;
@@ -35,29 +39,29 @@ export function TemplateSelector({ onSelectTemplate }: TemplateSelectorProps) {
   };
 
   return (
-    <Collapsible className="w-full space-y-2">
+    <Accordion type="single" collapsible className="w-full">
       {Object.entries(templates).map(([category, categoryTemplates]) => (
-        <div key={category}>
-          <CollapsibleTrigger className="flex w-full items-center justify-between space-x-4 px-4 py-2 text-lg font-semibold border-b">
+        <AccordionItem value={category} key={category}>
+          <AccordionTrigger className="text-lg font-semibold px-2 hover:bg-gray-50 dark:hover:bg-gray-900 rounded-t">
             {category}
-            <ChevronDownIcon className="h-4 w-4" />
-          </CollapsibleTrigger>
-          <CollapsibleContent className="space-y-2 py-2 px-4">
-            {Array.isArray(categoryTemplates) && categoryTemplates.map((template: any, index: number) => (
-              <div
-                key={index}
-                className="flex items-center justify-between rounded-md border px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer"
-                onClick={() => onSelectTemplate(template)}
-              >
-                <span className="text-sm font-medium leading-none">
-                  {getTemplateName(category, template, index)}
-                </span>
-              </div>
-            ))}
-            <Separator />
-          </CollapsibleContent>
-        </div>
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="flex flex-col space-y-1 p-1">
+              {Array.isArray(categoryTemplates) && categoryTemplates.map((template: any, index: number) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-between rounded-md px-3 py-2 text-sm hover:bg-blue-50 dark:hover:bg-blue-900/30 text-gray-700 dark:text-gray-300 cursor-pointer transition-colors"
+                  onClick={() => onSelectTemplate(template)}
+                >
+                  <span className="font-medium truncate">
+                    {getTemplateName(category, template, index)}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
       ))}
-    </Collapsible>
+    </Accordion>
   )
 }
